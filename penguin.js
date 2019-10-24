@@ -20,14 +20,10 @@ var getMeanT = function(penguin)
     return d3.mean(penguin.test.map(getGrade));
 }
 
-var getMeanFinal = function(penguin)
-{
-    return d3.mean(penguin.quizes.map(getGrade));
-}
-
 var createImages = function(data)
 {
     d3.select('#Images')
+    .append('tr')
     .selectAll('tr')
     .data(data)
     .enter()
@@ -75,22 +71,22 @@ var createTest = function(data)
     return meanTest;
     
 }
-var createFolder = function(penguin)
+var calcFinal = function(penguin)
 {
-    folder.meanQ = d3.mean(penguin.quizes.map(getGrade));
-    folder.meanT = d3.mean(penguin.test.map(getGrade));
-    folder.meanHW = d3.mean(penguin.homework.map(getGrade));
-    return folder;
+    var quiz = d3.mean(penguin.quizes.map(getGrade)) * .20;
+    var test = d3.mean(penguin.test.map(getGrade)) * .30;
+    var hw = d3.mean(penguin.homework.map(getGrade)) * .15;
+    var final = penguin.final[0].grade * .35;
+    return quiz + test + hw + final;
 }
 
 
 var createFinal = function(data)
 {
-    var folder = data.map(createFolder);
-    console.log(folder);
+    var FinalGrades = data.map(calcFinal);
     var temp = d3.select('#final')
     .selectAll('tr')
-    .data(meanFinal)
+    .data(FinalGrades)
     .enter()
     .append('tr')
     .text(function(d){return d});
